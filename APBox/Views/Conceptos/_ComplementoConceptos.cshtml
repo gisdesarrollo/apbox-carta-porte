@@ -1,0 +1,184 @@
+﻿<script>
+    $(function () {
+        $('#ValorUnitario').on("keyup", function () {
+            calculo();
+        });
+        $('#Cantidad').on("keyup", function () {
+            calculo();
+        });
+        function calculo() {
+            var multi = 0;
+            var cantidad = 0;
+
+            var precio = 0;
+            precio = cero($("#ValorUnitario").val());
+            cantidad = cero($("#Cantidad").val());
+            multi = cantidad * precio;
+            console.log("multi: " + multi + " cantidad: " + $("#Cantidad").val() + " precio: " + $("#ValorUnitario").val());
+            $("#Importe").val(multi);
+        }
+        function cero(valor) {
+            if (valor == "" || valor == "undefined") {
+                return valor = 0;
+            }else {
+                return parseFloat(valor);
+            }
+        }
+        $("#EliminarConcepto").on('click', function () {
+            console.log("id a eliminar" + $("#EliminarConcepto").data("id"));
+            $.ajax({
+                type: 'POST',
+                url: ' @Url.Action("EliminarConcepto", "Conceptos")',
+                data: JSON.stringify({
+                    Id: $("#EliminarConcepto").data("id")
+                 }),
+                dataType: 'html',
+                contentType: "application/json; charset=utf-8",
+            }).success(function () {
+                alert("Dato Eliminado");
+                window.location.href = "../Index"
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                    alert("Favor de llenar todos los datos para los detalles ");
+            });
+            return false;
+        });
+        $("#crearConcepto").on('click', function () {
+            var ImpRet = $("#CImpuestoR").val();
+            var ImpTras = $("#CImpuestoT").val();
+            console.log("impret: " + ImpRet + " ImpTras: " + ImpTras);
+            if (ImpRet == "") {
+                ImpRet = 0;
+            }
+            if (ImpTras == "") {
+                ImpTras = 0;
+            }
+            $.ajax({
+                type: 'POST',
+                url: ' @Url.Action("AgregarConceptos", "Conceptos")',
+                data: JSON.stringify({
+                    ClaveProdServID: $('#ClaveProdServ_IdConceptos').val(),
+                    ClaveUnidadID: $('#ClavesUnidadConc').val(),
+                    Cantidad: $('#Cantidad').val(),
+                    Unidad: $('#UnidadConceptos').val(),
+                    NoIdentificacion: $('#NoIdentificacion').val(),
+                    Descripcion: $('#DescripcionConc').val(),
+                    ValorUnitario: $('#ValorUnitario').val(),
+                    Importe: $('#Importe').val(),
+                    Descuento: $('#Descuento').val(),
+                    ImpuestoR: parseInt(ImpRet),
+                    ImpuestoT: parseInt(ImpTras),
+                }),
+                dataType: 'html',
+                contentType: "application/json; charset=utf-8",
+            }).success(function () {
+                window.location.href = "Index"
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                alert("Favor de llenar todos los datos para los detalles ");
+            });
+            return false;
+        });
+
+        $("#EditarConcepto").on('click', function () {
+            var ImpRet = $("#CImpuestoR").val();
+            var ImpTras = $("#CImpuestoT").val();
+            console.log("impret: " + ImpRet + " ImpTras: " + ImpTras);
+            if (ImpRet == "") {
+                ImpRet = 0;
+            }
+            if (ImpTras == "") {
+                ImpTras = 0;
+            }
+            console.log("impret: " + ImpRet + " ImpTras: " + ImpTras);
+            $.ajax({
+                type: 'POST',
+                url: ' @Url.Action("EditarConceptos", "Conceptos")',
+                data: JSON.stringify({
+                    Id: $("#EditarConcepto").data("id"),
+                    ClaveProdServID: $('#ClaveProdServ_IdConceptos').val(),
+                    ClaveUnidadID: $('#ClavesUnidadConc').val(),
+                    Cantidad: $('#Cantidad').val(),
+                    Unidad: $('#UnidadConceptos').val(),
+                    NoIdentificacion: $('#NoIdentificacion').val(),
+                    Descripcion: $('#DescripcionConc').val(),
+                    ValorUnitario: $('#ValorUnitario').val(),
+                    Importe: $('#Importe').val(),
+                    Descuento: $('#Descuento').val(),
+                    ImpuestoR: ImpRet,
+                    ImpuestoT: ImpTras
+                }),
+                dataType: 'html',
+                contentType: "application/json; charset=utf-8",
+            }).success(function () {
+                window.location.href = "../Index"
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                alert("Favor de llenar todos los datos para los detalles ");
+            });
+            return false;
+        });
+        //Validaciones
+        $('#ClavesUnidadConc').on('keyup', function () {
+            console.log("click keyup");
+            var claveUnidad = $('#ClavesUnidadConc').val();
+            var div = "#ClaveUnidadConcepto";
+            //ValidaEntrada(claveUnidad, div, "claveUnidad");
+
+            if (claveUnidad != "") {
+                $.get("/Conceptos/DatosClaveUnidad", { ClaveUnidad: claveUnidad }, function (data) {
+                    if (data.length > 0) {
+                        $.each(data, function (index, row) {
+                            $('#UnidadConceptos').val(row.Nombre);
+                        });
+                        $(div).html("");
+                    } else {
+                        $(div).html("El dato ingresado no existe");
+                        $('#UnidadConceptos').val("");
+                    }
+                });
+            } else {
+                $(div).html("");
+                $('#UnidadConceptos').val("");
+            }
+
+        });
+        $('#ClaveProdServ_IdConceptos').on('keyup', function () {
+            var dato = $('#ClaveProdServ_IdConceptos').val();
+            var div = "#ClaveProdServcon";
+            var valid;
+            if (dato != "") {
+                valid = ValidaEntrada(dato, div, "serv");
+            } else {
+                $(div).html("");
+            }
+
+        });
+
+    });
+  
+    function ValidaEntrada(input, div,t) {
+         $.ajax({
+                type: 'POST',
+                url: ' @Url.Action("Buscar", "Conceptos")',
+             data: JSON.stringify({
+                 valor: input,
+                 tipo: t
+         }),
+          dataType: 'html',
+            contentType: "application/json; charset=utf-8",
+         }).success(function (valor) {
+             console.log(valor);
+             if (valor == 0) {
+                 $(div).html("El dato ingresado no existe");
+             }
+             else {
+                 $(div).html("");
+             }
+
+         })
+         .fail(function (jqxhr, textStatus, error) {
+
+         });
+    }
+</script>

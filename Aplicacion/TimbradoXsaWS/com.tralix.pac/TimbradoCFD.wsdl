@@ -1,0 +1,2437 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:tns="http://www.sat.gob.mx/cfd/3" targetNamespace="http://www.sat.gob.mx/cfd/3" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xs:schema xmlns:ecc="http://www.sat.gob.mx/ecc" xmlns:ventavehiculos="http://www.sat.gob.mx/ventavehiculos" xmlns:terceros="http://www.sat.gob.mx/terceros" xmlns:detallista="http://www.sat.gob.mx/detallista" xmlns:ecb="http://www.sat.gob.mx/ecb" xmlns:tpe="http://www.sat.gob.mx/TuristaPasajeroExtranjero" xmlns:implocal="http://www.sat.gob.mx/implocal" xmlns:pagoenespecie="http://www.sat.gob.mx/pagoenespecie" xmlns:spei="http://www.sat.gob.mx/spei" xmlns:pfic="http://www.sat.gob.mx/pfic" xmlns:nomina="http://www.sat.gob.mx/nomina" xmlns:psgecfd="http://www.sat.gob.mx/psgecfd" xmlns:divisas="http://www.sat.gob.mx/divisas" xmlns:iedu="http://www.sat.gob.mx/iedu" xmlns:leyendasFisc="http://www.sat.gob.mx/leyendasFiscales" elementFormDefault="qualified" targetNamespace="http://www.sat.gob.mx/cfd/3">
+      <xs:element name="Error">
+        <xs:complexType>
+          <xs:sequence minOccurs="0">
+            <xs:element maxOccurs="unbounded" name="descripcionError" type="xs:string" />
+          </xs:sequence>
+          <xs:attribute name="codigo" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Timbrado">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Comprobante">
+              <xs:annotation>
+                <xs:documentation>EstÃ¡ndar de Comprobante Fiscal Digital por
+									Internet.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" name="CfdiRelacionados">
+                    <xs:annotation>
+                      <xs:documentation>Nodo opcional para precisar la
+												informaciÃ³n de los comprobantes
+												relacionados.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element minOccurs="1" maxOccurs="unbounded" name="CfdiRelacionado">
+                          <xs:annotation>
+                            <xs:documentation>Nodo requerido para precisar la
+												informaciÃ³n de los comprobantes
+												relacionados.</xs:documentation>
+                          </xs:annotation>
+                          <xs:complexType>
+                            <xs:attribute name="UUID" use="required">
+                              <xs:annotation>
+                                <xs:documentation>Atributo requerido para
+												registrar el folio fiscal (UUID) de un CFDI
+												relacionado con el presente comprobante, por
+												ejemplo: Si el CFDI relacionado es un comprobante
+												de traslado que sirve para registrar el movimiento
+												de la mercancÃ­a. Si este comprobante se usa como
+												nota de crÃ©dito o nota de dÃ©bito del comprobante
+												relacionado. Si este comprobante es una devoluciÃ³n
+												sobre el comprobante relacionado. Si Ã©ste
+												sustituye a una factura
+												cancelada.</xs:documentation>
+                              </xs:annotation>
+                              <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                  <xs:length value="36" />
+                                  <xs:whiteSpace value="collapse" />
+                                  <xs:pattern value="[a-f0-9A-F]{8}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{12}" />
+                                </xs:restriction>
+                              </xs:simpleType>
+                            </xs:attribute>
+                          </xs:complexType>
+                        </xs:element>
+                      </xs:sequence>
+                      <xs:attribute name="TipoRelacion" use="required">
+                        <xs:annotation>
+                          <xs:documentation>Atributo requerido para indicar
+												la clave de la relaciÃ³n que existe entre Ã©ste que
+												se esta generando y el o los CFDI
+												previos.</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="Emisor">
+                    <xs:annotation>
+                      <xs:documentation>Nodo requerido para expresar la
+												informaciÃ³n del contribuyente emisor del
+												comprobante.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:attribute name="Rfc" use="required">
+                        <xs:annotation>
+                          <xs:documentation>Atributo requerido para
+												registrar la Clave del Registro Federal de
+												Contribuyentes correspondiente al contribuyente
+												emisor del comprobante.</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                      <xs:attribute name="Nombre" use="optional">
+                        <xs:annotation>
+                          <xs:documentation>Atributo opcional para registrar
+												el nombre, denominaciÃ³n o razÃ³n social del
+												contribuyente emisor del
+												comprobante.</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                          <xs:restriction base="xs:string">
+                            <xs:minLength value="1" />
+                            <xs:maxLength value="254" />
+                            <xs:whiteSpace value="collapse" />
+                            <xs:pattern value="[^|]{1,254}" />
+                          </xs:restriction>
+                        </xs:simpleType>
+                      </xs:attribute>
+                      <xs:attribute name="RegimenFiscal" use="required">
+                        <xs:annotation>
+                          <xs:documentation>Atributo requerido para
+												incorporar la clave del rÃ©gimen del contribuyente
+												emisor al que aplicarÃ¡ el efecto fiscal de este
+												comprobante.</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="Receptor">
+                    <xs:annotation>
+                      <xs:documentation>Nodo requerido para precisar la
+												informaciÃ³n del contribuyente receptor del
+												comprobante.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:attribute name="Rfc" use="required">
+                        <xs:annotation>
+                          <xs:documentation>Atributo requerido para precisar
+												la Clave del Registro Federal de Contribuyentes
+												correspondiente al contribuyente receptor del
+												comprobante.</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                      <xs:attribute name="Nombre" use="optional">
+                        <xs:annotation>
+                          <xs:documentation>Atributo opcional para precisar
+												el nombre, denominaciÃ³n o razÃ³n social del
+												contribuyente receptor del
+												comprobante.</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                          <xs:restriction base="xs:string">
+                            <xs:minLength value="1" />
+                            <xs:maxLength value="254" />
+                            <xs:whiteSpace value="collapse" />
+                            <xs:pattern value="[^|]{1,254}" />
+                          </xs:restriction>
+                        </xs:simpleType>
+                      </xs:attribute>
+                      <xs:attribute name="ResidenciaFiscal" use="optional">
+                        <xs:annotation>
+                          <xs:documentation>Atributo condicional para
+												registrar la clave del paÃ­s de residencia para
+												efectos fiscales del receptor del comprobante,
+												cuando se trate de un extranjero, y que es
+												conforme con la especificaciÃ³n ISO 3166-1 alpha-3.
+												Es requerido cuando se incluya el complemento de
+												comercio exterior o se registre el atributo
+												NumRegIdTrib.</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                      <xs:attribute name="NumRegIdTrib" use="optional">
+                        <xs:annotation>
+                          <xs:documentation>Atributo condicional para
+												expresar el nÃºmero de registro de identidad fiscal
+												del receptor cuando sea residente en el
+												extranjero. Es requerido cuando se incluya el
+												complemento de comercio
+												exterior.</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                          <xs:restriction base="xs:string">
+                            <xs:minLength value="1" />
+                            <xs:maxLength value="40" />
+                            <xs:whiteSpace value="collapse" />
+                          </xs:restriction>
+                        </xs:simpleType>
+                      </xs:attribute>
+                      <xs:attribute name="UsoCFDI" use="required">
+                        <xs:annotation>
+                          <xs:documentation>Atributo requerido para expresar
+												la clave del uso que darÃ¡ a esta factura el
+												receptor del CFDI.</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="Conceptos">
+                    <xs:annotation>
+                      <xs:documentation>Nodo requerido para listar los
+												conceptos cubiertos por el
+												comprobante.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="Concepto">
+                          <xs:annotation>
+                            <xs:documentation>Nodo requerido para registrar la
+												informaciÃ³n detallada de un bien o servicio
+												amparado en el comprobante.</xs:documentation>
+                          </xs:annotation>
+                          <xs:complexType>
+                            <xs:sequence>
+                              <xs:element minOccurs="0" name="Impuestos">
+                                <xs:annotation>
+                                  <xs:documentation>Nodo opcional para capturar los
+												impuestos aplicables al presente concepto. Cuando
+												un concepto no registra un impuesto, implica que
+												no es objeto del mismo.</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                  <xs:sequence>
+                                    <xs:element minOccurs="0" name="Traslados">
+                                      <xs:annotation>
+                                        <xs:documentation>Nodo opcional para asentar los
+												impuestos trasladados aplicables al presente
+												concepto.</xs:documentation>
+                                      </xs:annotation>
+                                      <xs:complexType>
+                                        <xs:sequence>
+                                          <xs:element maxOccurs="unbounded" name="Traslado">
+                                            <xs:annotation>
+                                              <xs:documentation>Nodo requerido para asentar la
+												informaciÃ³n detallada de un traslado de impuestos
+												aplicable al presente concepto.</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                              <xs:attribute name="Base" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Atributo requerido para seÃ±alar
+												la base para el cÃ¡lculo del impuesto, la
+												determinaciÃ³n de la base se realiza de acuerdo con
+												las disposiciones fiscales vigentes. No se
+												permiten valores negativos.</xs:documentation>
+                                                </xs:annotation>
+                                                <xs:simpleType>
+                                                  <xs:restriction base="xs:decimal">
+                                                    <xs:fractionDigits value="6" />
+                                                    <xs:minInclusive value="0.000001" />
+                                                    <xs:whiteSpace value="collapse" />
+                                                  </xs:restriction>
+                                                </xs:simpleType>
+                                              </xs:attribute>
+                                              <xs:attribute name="Impuesto" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Atributo requerido para seÃ±alar
+												la clave del tipo de impuesto trasladado aplicable
+												al concepto.</xs:documentation>
+                                                </xs:annotation>
+                                              </xs:attribute>
+                                              <xs:attribute name="TipoFactor" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Atributo requerido para seÃ±alar
+												la clave del tipo de factor que se aplica a la
+												base del impuesto.</xs:documentation>
+                                                </xs:annotation>
+                                              </xs:attribute>
+                                              <xs:attribute name="TasaOCuota" use="optional">
+                                                <xs:annotation>
+                                                  <xs:documentation>Atributo condicional para
+												seÃ±alar el valor de la tasa o cuota del impuesto
+												que se traslada para el presente concepto. Es
+												requerido cuando el atributo TipoFactor tenga una
+												clave que corresponda a Tasa o
+												Cuota.</xs:documentation>
+                                                </xs:annotation>
+                                                <xs:simpleType>
+                                                  <xs:restriction base="xs:decimal">
+                                                    <xs:fractionDigits value="6" />
+                                                    <xs:minInclusive value="0.000000" />
+                                                    <xs:whiteSpace value="collapse" />
+                                                  </xs:restriction>
+                                                </xs:simpleType>
+                                              </xs:attribute>
+                                              <xs:attribute name="Importe" use="optional">
+                                                <xs:annotation>
+                                                  <xs:documentation>Atributo condicional para
+												seÃ±alar el importe del impuesto trasladado que
+												aplica al concepto. No se permiten valores
+												negativos. Es requerido cuando TipoFactor sea Tasa
+												o Cuota</xs:documentation>
+                                                </xs:annotation>
+                                              </xs:attribute>
+                                            </xs:complexType>
+                                          </xs:element>
+                                        </xs:sequence>
+                                      </xs:complexType>
+                                    </xs:element>
+                                    <xs:element minOccurs="0" name="Retenciones">
+                                      <xs:annotation>
+                                        <xs:documentation>Nodo opcional para asentar los
+												impuestos retenidos aplicables al presente
+												concepto.</xs:documentation>
+                                      </xs:annotation>
+                                      <xs:complexType>
+                                        <xs:sequence>
+                                          <xs:element maxOccurs="unbounded" name="Retencion">
+                                            <xs:annotation>
+                                              <xs:documentation>Nodo requerido para asentar la
+												informaciÃ³n detallada de una retenciÃ³n de
+												impuestos aplicable al presente
+												concepto.</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                              <xs:attribute name="Base" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Atributo requerido para seÃ±alar
+												la base para el cÃ¡lculo de la retenciÃ³n, la
+												determinaciÃ³n de la base se realiza de acuerdo con
+												las disposiciones fiscales vigentes. No se
+												permiten valores negativos.</xs:documentation>
+                                                </xs:annotation>
+                                                <xs:simpleType>
+                                                  <xs:restriction base="xs:decimal">
+                                                    <xs:fractionDigits value="6" />
+                                                    <xs:minInclusive value="0.000001" />
+                                                    <xs:whiteSpace value="collapse" />
+                                                  </xs:restriction>
+                                                </xs:simpleType>
+                                              </xs:attribute>
+                                              <xs:attribute name="Impuesto" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Atributo requerido para seÃ±alar
+												la clave del tipo de impuesto retenido aplicable
+												al concepto.</xs:documentation>
+                                                </xs:annotation>
+                                              </xs:attribute>
+                                              <xs:attribute name="TipoFactor" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Atributo requerido para seÃ±alar
+												la clave del tipo de factor que se aplica a la
+												base del impuesto.</xs:documentation>
+                                                </xs:annotation>
+                                              </xs:attribute>
+                                              <xs:attribute name="TasaOCuota" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Atributo requerido para seÃ±alar
+												la tasa o cuota del impuesto que se retiene para
+												el presente concepto.</xs:documentation>
+                                                </xs:annotation>
+                                                <xs:simpleType>
+                                                  <xs:restriction base="xs:decimal">
+                                                    <xs:whiteSpace value="collapse" />
+                                                    <xs:minInclusive value="0.000000" />
+                                                    <xs:fractionDigits value="6" />
+                                                  </xs:restriction>
+                                                </xs:simpleType>
+                                              </xs:attribute>
+                                              <xs:attribute name="Importe" use="required">
+                                                <xs:annotation>
+                                                  <xs:documentation>Atributo requerido para seÃ±alar
+												el importe del impuesto retenido que aplica al
+												concepto. No se permiten valores
+												negativos.</xs:documentation>
+                                                </xs:annotation>
+                                              </xs:attribute>
+                                            </xs:complexType>
+                                          </xs:element>
+                                        </xs:sequence>
+                                      </xs:complexType>
+                                    </xs:element>
+                                  </xs:sequence>
+                                </xs:complexType>
+                              </xs:element>
+                              <xs:element minOccurs="0" maxOccurs="unbounded" name="InformacionAduanera">
+                                <xs:annotation>
+                                  <xs:documentation>Nodo opcional para introducir la
+												informaciÃ³n aduanera aplicable cuando se trate de
+												ventas de primera mano de mercancÃ­as importadas o
+												se trate de operaciones de comercio exterior con
+												bienes o servicios.</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                  <xs:attribute name="NumeroPedimento" use="required">
+                                    <xs:annotation>
+                                      <xs:documentation>Atributo requerido para expresar
+												el nÃºmero del pedimento que ampara la importaciÃ³n
+												del bien que se expresa en el siguiente formato:
+												Ãºltimos 2 dÃ­gitos del aÃ±o de validaciÃ³n seguidos
+												por dos espacios, 2 dÃ­gitos de la aduana de
+												despacho seguidos por dos espacios, 4 dÃ­gitos del
+												nÃºmero de la patente seguidos por dos espacios, 1
+												dÃ­gito que corresponde al Ãºltimo dÃ­gito del aÃ±o en
+												curso, salvo que se trate de un pedimento
+												consolidado iniciado en el aÃ±o inmediato anterior
+												o del pedimento original de una rectificaciÃ³n,
+												seguido de 6 dÃ­gitos de la numeraciÃ³n progresiva
+												por aduana.</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                      <xs:restriction base="xs:string">
+                                        <xs:length value="21" />
+                                        <xs:pattern value="[0-9]{2}  [0-9]{2}  [0-9]{4}  [0-9]{7}" />
+                                      </xs:restriction>
+                                    </xs:simpleType>
+                                  </xs:attribute>
+                                </xs:complexType>
+                              </xs:element>
+                              <xs:element minOccurs="0" name="CuentaPredial">
+                                <xs:annotation>
+                                  <xs:documentation>Nodo opcional para asentar el
+												nÃºmero de cuenta predial con el que fue registrado
+												el inmueble, en el sistema catastral de la entidad
+												federativa de que trate, o bien para incorporar
+												los datos de identificaciÃ³n del certificado de
+												participaciÃ³n inmobiliaria no
+												amortizable.</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                  <xs:attribute name="Numero" use="required">
+                                    <xs:annotation>
+                                      <xs:documentation>Atributo requerido para precisar
+												el nÃºmero de la cuenta predial del inmueble
+												cubierto por el presente concepto, o bien para
+												incorporar los datos de identificaciÃ³n del
+												certificado de participaciÃ³n inmobiliaria no
+												amortizable, tratÃ¡ndose de
+												arrendamiento.</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                      <xs:restriction base="xs:string">
+                                        <xs:minLength value="1" />
+                                        <xs:maxLength value="150" />
+                                        <xs:whiteSpace value="collapse" />
+                                        <xs:pattern value="[0-9]{1,150}" />
+                                      </xs:restriction>
+                                    </xs:simpleType>
+                                  </xs:attribute>
+                                </xs:complexType>
+                              </xs:element>
+                              <xs:element minOccurs="0" name="ComplementoConcepto">
+                                <xs:annotation>
+                                  <xs:documentation>Nodo opcional donde se incluyen
+												los nodos complementarios de extensiÃ³n al concepto
+												definidos por el SAT, de acuerdo con las
+												disposiciones particulares para un sector o
+												actividad especÃ­fica.</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                  <xs:sequence>
+                                    <xs:any maxOccurs="unbounded" />
+                                  </xs:sequence>
+                                </xs:complexType>
+                              </xs:element>
+                              <xs:element minOccurs="0" maxOccurs="unbounded" name="Parte">
+                                <xs:annotation>
+                                  <xs:documentation>Nodo opcional para expresar las
+												partes o componentes que integran la totalidad del
+												concepto expresado en el comprobante fiscal
+												digital por Internet.</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                  <xs:sequence>
+                                    <xs:element minOccurs="0" maxOccurs="unbounded" name="InformacionAduanera">
+                                      <xs:annotation>
+                                        <xs:documentation>Nodo opcional para introducir la
+												informaciÃ³n aduanera aplicable cuando se trate de
+												ventas de primera mano de mercancÃ­as importadas o
+												se trate de operaciones de comercio exterior con
+												bienes o servicios.</xs:documentation>
+                                      </xs:annotation>
+                                      <xs:complexType>
+                                        <xs:attribute name="NumeroPedimento" use="required">
+                                          <xs:annotation>
+                                            <xs:documentation>Atributo requerido para expresar
+												el nÃºmero del pedimento que ampara la importaciÃ³n
+												del bien que se expresa en el siguiente formato:
+												Ãºltimos 2 dÃ­gitos del aÃ±o de validaciÃ³n seguidos
+												por dos espacios, 2 dÃ­gitos de la aduana de
+												despacho seguidos por dos espacios, 4 dÃ­gitos del
+												nÃºmero de la patente seguidos por dos espacios, 1
+												dÃ­gito que corresponde al Ãºltimo dÃ­gito del aÃ±o en
+												curso, salvo que se trate de un pedimento
+												consolidado iniciado en el aÃ±o inmediato anterior
+												o del pedimento original de una rectificaciÃ³n,
+												seguido de 6 dÃ­gitos de la numeraciÃ³n progresiva
+												por aduana.</xs:documentation>
+                                          </xs:annotation>
+                                          <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                              <xs:length value="21" />
+                                              <xs:pattern value="[0-9]{2}  [0-9]{2}  [0-9]{4}  [0-9]{7}" />
+                                            </xs:restriction>
+                                          </xs:simpleType>
+                                        </xs:attribute>
+                                      </xs:complexType>
+                                    </xs:element>
+                                  </xs:sequence>
+                                  <xs:attribute name="ClaveProdServ" use="required">
+                                    <xs:annotation>
+                                      <xs:documentation>Atributo requerido para expresar
+												la clave del producto o del servicio amparado por
+												la presente parte. Es requerido y deben utilizar
+												las claves del catÃ¡logo de productos y servicios,
+												cuando los conceptos que registren por sus
+												actividades correspondan con dichos
+												conceptos.</xs:documentation>
+                                    </xs:annotation>
+                                  </xs:attribute>
+                                  <xs:attribute name="NoIdentificacion" use="optional">
+                                    <xs:annotation>
+                                      <xs:documentation>Atributo opcional para expresar
+												el nÃºmero de serie, nÃºmero de parte del bien o
+												identificador del producto o del servicio amparado
+												por la presente parte. Opcionalmente se puede
+												utilizar claves del estÃ¡ndar
+												GTIN.</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                      <xs:restriction base="xs:string">
+                                        <xs:minLength value="1" />
+                                        <xs:maxLength value="100" />
+                                        <xs:whiteSpace value="collapse" />
+                                        <xs:pattern value="[^|]{1,100}" />
+                                      </xs:restriction>
+                                    </xs:simpleType>
+                                  </xs:attribute>
+                                  <xs:attribute name="Cantidad" use="required">
+                                    <xs:annotation>
+                                      <xs:documentation>Atributo requerido para precisar
+												la cantidad de bienes o servicios del tipo
+												particular definido por la presente
+												parte.</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                      <xs:restriction base="xs:decimal">
+                                        <xs:fractionDigits value="6" />
+                                        <xs:minInclusive value="0.000001" />
+                                        <xs:whiteSpace value="collapse" />
+                                      </xs:restriction>
+                                    </xs:simpleType>
+                                  </xs:attribute>
+                                  <xs:attribute name="Unidad" use="optional">
+                                    <xs:annotation>
+                                      <xs:documentation>Atributo opcional para precisar
+												la unidad de medida propia de la operaciÃ³n del
+												emisor, aplicable para la cantidad expresada en la
+												parte. La unidad debe corresponder con la
+												descripciÃ³n de la parte. </xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                      <xs:restriction base="xs:string">
+                                        <xs:minLength value="1" />
+                                        <xs:maxLength value="20" />
+                                        <xs:whiteSpace value="collapse" />
+                                        <xs:pattern value="[^|]{1,20}" />
+                                      </xs:restriction>
+                                    </xs:simpleType>
+                                  </xs:attribute>
+                                  <xs:attribute name="Descripcion" use="required">
+                                    <xs:annotation>
+                                      <xs:documentation>Atributo requerido para precisar
+												la descripciÃ³n del bien o servicio cubierto por la
+												presente parte.</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                      <xs:restriction base="xs:string">
+                                        <xs:minLength value="1" />
+                                        <xs:maxLength value="1000" />
+                                        <xs:whiteSpace value="collapse" />
+                                        <xs:pattern value="[^|]{1,1000}" />
+                                      </xs:restriction>
+                                    </xs:simpleType>
+                                  </xs:attribute>
+                                  <xs:attribute name="ValorUnitario" use="optional">
+                                    <xs:annotation>
+                                      <xs:documentation>Atributo opcional para precisar
+												el valor o precio unitario del bien o servicio
+												cubierto por la presente parte. No se permiten
+												valores negativos.</xs:documentation>
+                                    </xs:annotation>
+                                  </xs:attribute>
+                                  <xs:attribute name="Importe" use="optional">
+                                    <xs:annotation>
+                                      <xs:documentation>Atributo opcional para precisar
+												el importe total de los bienes o servicios de la
+												presente parte. Debe ser equivalente al resultado
+												de multiplicar la cantidad por el valor unitario
+												expresado en la parte. No se permiten valores
+												negativos.</xs:documentation>
+                                    </xs:annotation>
+                                  </xs:attribute>
+                                </xs:complexType>
+                              </xs:element>
+                            </xs:sequence>
+                            <xs:attribute name="ClaveProdServ" use="required">
+                              <xs:annotation>
+                                <xs:documentation>Atributo requerido para expresar
+												la clave del producto o del servicio amparado por
+												el presente concepto. Es requerido y deben
+												utilizar las claves del catÃ¡logo de productos y
+												servicios, cuando los conceptos que registren por
+												sus actividades correspondan con dichos
+												conceptos.</xs:documentation>
+                              </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="NoIdentificacion" use="optional">
+                              <xs:annotation>
+                                <xs:documentation>Atributo opcional para expresar
+												el nÃºmero de parte, identificador del producto o
+												del servicio, la clave de producto o servicio, SKU
+												o equivalente, propia de la operaciÃ³n del emisor,
+												amparado por el presente concepto. Opcionalmente
+												se puede utilizar claves del estÃ¡ndar
+												GTIN.</xs:documentation>
+                              </xs:annotation>
+                              <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                  <xs:whiteSpace value="collapse" />
+                                  <xs:minLength value="1" />
+                                  <xs:maxLength value="100" />
+                                  <xs:pattern value="[^|]{1,100}" />
+                                </xs:restriction>
+                              </xs:simpleType>
+                            </xs:attribute>
+                            <xs:attribute name="Cantidad" use="required">
+                              <xs:annotation>
+                                <xs:documentation>Atributo requerido para precisar
+												la cantidad de bienes o servicios del tipo
+												particular definido por el presente
+												concepto.</xs:documentation>
+                              </xs:annotation>
+                              <xs:simpleType>
+                                <xs:restriction base="xs:decimal">
+                                  <xs:fractionDigits value="6" />
+                                  <xs:minInclusive value="0.000001" />
+                                  <xs:whiteSpace value="collapse" />
+                                </xs:restriction>
+                              </xs:simpleType>
+                            </xs:attribute>
+                            <xs:attribute name="ClaveUnidad" use="required">
+                              <xs:annotation>
+                                <xs:documentation>Atributo requerido para precisar
+												la clave de unidad de medida estandarizada
+												aplicable para la cantidad expresada en el
+												concepto. La unidad debe corresponder con la
+												descripciÃ³n del concepto.</xs:documentation>
+                              </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="Unidad" use="optional">
+                              <xs:annotation>
+                                <xs:documentation>Atributo opcional para precisar
+												la unidad de medida propia de la operaciÃ³n del
+												emisor, aplicable para la cantidad expresada en el
+												concepto. La unidad debe corresponder con la
+												descripciÃ³n del concepto.</xs:documentation>
+                              </xs:annotation>
+                              <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                  <xs:minLength value="1" />
+                                  <xs:maxLength value="20" />
+                                  <xs:whiteSpace value="collapse" />
+                                  <xs:pattern value="[^|]{1,20}" />
+                                </xs:restriction>
+                              </xs:simpleType>
+                            </xs:attribute>
+                            <xs:attribute name="Descripcion" use="required">
+                              <xs:annotation>
+                                <xs:documentation>Atributo requerido para precisar
+												la descripciÃ³n del bien o servicio cubierto por el
+												presente concepto.</xs:documentation>
+                              </xs:annotation>
+                              <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                  <xs:minLength value="1" />
+                                  <xs:maxLength value="1000" />
+                                  <xs:whiteSpace value="collapse" />
+                                  <xs:pattern value="[^|]{1,1000}" />
+                                </xs:restriction>
+                              </xs:simpleType>
+                            </xs:attribute>
+                            <xs:attribute name="ValorUnitario" use="required">
+                              <xs:annotation>
+                                <xs:documentation>Atributo requerido para precisar
+												el valor o precio unitario del bien o servicio
+												cubierto por el presente
+												concepto.</xs:documentation>
+                              </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="Importe" use="required">
+                              <xs:annotation>
+                                <xs:documentation>Atributo requerido para precisar
+												el importe total de los bienes o servicios del
+												presente concepto. Debe ser equivalente al
+												resultado de multiplicar la cantidad por el valor
+												unitario expresado en el concepto. No se permiten
+												valores negativos. </xs:documentation>
+                              </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="Descuento">
+                              <xs:annotation>
+                                <xs:documentation>Atributo opcional para
+												representar el importe de los descuentos
+												aplicables al concepto. No se permiten valores
+												negativos.</xs:documentation>
+                              </xs:annotation>
+                            </xs:attribute>
+                          </xs:complexType>
+                        </xs:element>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element minOccurs="0" name="Impuestos">
+                    <xs:annotation>
+                      <xs:documentation>Nodo condicional para expresar el
+												resumen de los impuestos
+												aplicables.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element minOccurs="0" name="Retenciones">
+                          <xs:annotation>
+                            <xs:documentation>Nodo condicional para capturar
+												los impuestos retenidos aplicables. Es requerido
+												cuando en los conceptos se registre algÃºn impuesto
+												retenido.</xs:documentation>
+                          </xs:annotation>
+                          <xs:complexType>
+                            <xs:sequence>
+                              <xs:element maxOccurs="unbounded" name="Retencion">
+                                <xs:annotation>
+                                  <xs:documentation>Nodo requerido para la
+												informaciÃ³n detallada de una retenciÃ³n de impuesto
+												especÃ­fico.</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                  <xs:attribute name="Impuesto" use="required">
+                                    <xs:annotation>
+                                      <xs:documentation>Atributo requerido para seÃ±alar
+												la clave del tipo de impuesto
+												retenido</xs:documentation>
+                                    </xs:annotation>
+                                  </xs:attribute>
+                                  <xs:attribute name="Importe" use="required">
+                                    <xs:annotation>
+                                      <xs:documentation>Atributo requerido para seÃ±alar
+												el monto del impuesto retenido. No se permiten
+												valores negativos.</xs:documentation>
+                                    </xs:annotation>
+                                  </xs:attribute>
+                                </xs:complexType>
+                              </xs:element>
+                            </xs:sequence>
+                          </xs:complexType>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="Traslados">
+                          <xs:annotation>
+                            <xs:documentation>Nodo condicional para capturar
+												los impuestos trasladados aplicables. Es requerido
+												cuando en los conceptos se registre un impuesto
+												trasladado.</xs:documentation>
+                          </xs:annotation>
+                          <xs:complexType>
+                            <xs:sequence>
+                              <xs:element maxOccurs="unbounded" name="Traslado">
+                                <xs:annotation>
+                                  <xs:documentation>Nodo requerido para la
+												informaciÃ³n detallada de un traslado de impuesto
+												especÃ­fico.</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                  <xs:attribute name="Impuesto" use="required">
+                                    <xs:annotation>
+                                      <xs:documentation>Atributo requerido para seÃ±alar
+												la clave del tipo de impuesto
+												trasladado.</xs:documentation>
+                                    </xs:annotation>
+                                  </xs:attribute>
+                                  <xs:attribute name="TipoFactor" use="required">
+                                    <xs:annotation>
+                                      <xs:documentation>Atributo requerido para seÃ±alar
+												la clave del tipo de factor que se aplica a la
+												base del impuesto.</xs:documentation>
+                                    </xs:annotation>
+                                  </xs:attribute>
+                                  <xs:attribute name="TasaOCuota" use="required">
+                                    <xs:annotation>
+                                      <xs:documentation>Atributo requerido para seÃ±alar
+												el valor de la tasa o cuota del impuesto que se
+												traslada por los conceptos amparados en el
+												comprobante.</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                      <xs:restriction base="xs:decimal">
+                                        <xs:whiteSpace value="collapse" />
+                                        <xs:minInclusive value="0.000000" />
+                                        <xs:fractionDigits value="6" />
+                                      </xs:restriction>
+                                    </xs:simpleType>
+                                  </xs:attribute>
+                                  <xs:attribute name="Importe" use="required">
+                                    <xs:annotation>
+                                      <xs:documentation>Atributo requerido para seÃ±alar
+												la suma del importe del impuesto trasladado,
+												agrupado por impuesto, TipoFactor y TasaOCuota. No
+												se permiten valores negativos.</xs:documentation>
+                                    </xs:annotation>
+                                  </xs:attribute>
+                                </xs:complexType>
+                              </xs:element>
+                            </xs:sequence>
+                          </xs:complexType>
+                        </xs:element>
+                      </xs:sequence>
+                      <xs:attribute name="TotalImpuestosRetenidos" use="optional">
+                        <xs:annotation>
+                          <xs:documentation>Atributo condicional para
+												expresar el total de los impuestos retenidos que
+												se desprenden de los conceptos expresados en el
+												comprobante fiscal digital por Internet. No se
+												permiten valores negativos. Es requerido cuando en
+												los conceptos se registren impuestos
+												retenidos</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                      <xs:attribute name="TotalImpuestosTrasladados" use="optional">
+                        <xs:annotation>
+                          <xs:documentation>Atributo condicional para
+												expresar el total de los impuestos trasladados que
+												se desprenden de los conceptos expresados en el
+												comprobante fiscal digital por Internet. No se
+												permiten valores negativos. Es requerido cuando en
+												los conceptos se registren impuestos
+												trasladados.</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" name="Complemento">
+                    <xs:annotation>
+                      <xs:documentation>Nodo opcional donde se incluye el
+												complemento Timbre Fiscal Digital de manera
+												obligatoria y los nodos complementarios determinados
+												por el SAT, de acuerdo con las disposiciones
+												particulares para un sector o actividad
+												especÃ­fica.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:any minOccurs="0" maxOccurs="unbounded" />
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element minOccurs="0" name="Addenda">
+                    <xs:annotation>
+                      <xs:documentation>Nodo opcional para recibir las
+												extensiones al presente formato que sean de utilidad
+												al contribuyente. Para las reglas de uso del mismo,
+												referirse al formato origen.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:any maxOccurs="unbounded" />
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:attribute fixed="3.3" name="Version" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido con valor prefijado a
+											3.3 que indica la versiÃ³n del estÃ¡ndar bajo el que se
+											encuentra expresado el comprobante.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:whiteSpace value="collapse" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="Serie" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>Atributo opcional para precisar la serie
+											para control interno del contribuyente. Este atributo
+											acepta una cadena de caracteres.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:minLength value="1" />
+                      <xs:maxLength value="25" />
+                      <xs:whiteSpace value="collapse" />
+                      <xs:pattern value="[^|]{1,25}" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="Folio" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>Atributo opcional para control interno del
+											contribuyente que expresa el folio del comprobante,
+											acepta una cadena de caracteres.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:minLength value="1" />
+                      <xs:maxLength value="40" />
+                      <xs:whiteSpace value="collapse" />
+                      <xs:pattern value="[^|]{1,40}" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="Fecha" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para la expresiÃ³n de la
+											fecha y hora de expediciÃ³n del Comprobante Fiscal
+											Digital por Internet. Se expresa en la forma
+											AAAA-MM-DDThh:mm:ss y debe corresponder con la hora
+											local donde se expide el comprobante.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="Sello" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para contener el sello
+											digital del comprobante fiscal, al que hacen referencia
+											las reglas de resoluciÃ³n miscelÃ¡nea vigente. El sello
+											debe ser expresado como una cadena de texto en formato
+											Base 64.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:whiteSpace value="collapse" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="FormaPago" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>Atributo condicional para expresar la
+											clave de la forma de pago de los bienes o servicios
+											amparados por el comprobante. Si no se conoce la forma
+											de pago este atributo se debe omitir.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="NoCertificado" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para expresar el nÃºmero
+											de serie del certificado de sello digital que ampara al
+											comprobante, de acuerdo con el acuse correspondiente a
+											20 posiciones otorgado por el sistema del
+											SAT.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:length value="20" />
+                      <xs:whiteSpace value="collapse" />
+                      <xs:pattern value="[0-9]{20}" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="Certificado" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido que sirve para
+											incorporar el certificado de sello digital que ampara al
+											comprobante, como texto en formato base
+											64.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:whiteSpace value="collapse" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="CondicionesDePago" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>Atributo condicional para expresar las
+											condiciones comerciales aplicables para el pago del
+											comprobante fiscal digital por Internet. Este atributo
+											puede ser condicionado mediante atributos o
+											complementos.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:whiteSpace value="collapse" />
+                      <xs:minLength value="1" />
+                      <xs:maxLength value="1000" />
+                      <xs:pattern value="[^|]{1,1000}" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="SubTotal" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para representar la
+											suma de los importes de los conceptos antes de
+											descuentos e impuesto. No se permiten valores
+											negativos.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="Descuento" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>Atributo condicional para representar el
+											importe total de los descuentos aplicables antes de
+											impuestos. No se permiten valores negativos. Se debe
+											registrar cuando existan conceptos con
+											descuento.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="Moneda" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para identificar la
+											clave de la moneda utilizada para expresar los montos,
+											cuando se usa moneda nacional se registra MXN. Conforme
+											con la especificaciÃ³n ISO 4217.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="TipoCambio" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>Atributo condicional para representar el
+											tipo de cambio conforme con la moneda usada. Es
+											requerido cuando la clave de moneda es distinta de MXN y
+											de XXX. El valor debe reflejar el nÃºmero de pesos
+											mexicanos que equivalen a una unidad de la divisa
+											seÃ±alada en el atributo moneda. Si el valor estÃ¡ fuera
+											del porcentaje aplicable a la moneda tomado del catÃ¡logo
+											c_Moneda, el emisor debe obtener del PAC que vaya a
+											timbrar el CFDI, de manera no automÃ¡tica, una clave de
+											confirmaciÃ³n para ratificar que el valor es correcto e
+											integrar dicha clave en el atributo
+											Confirmacion.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                      <xs:fractionDigits value="6" />
+                      <xs:minInclusive value="0.000001" />
+                      <xs:whiteSpace value="collapse" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="Total" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para representar la
+											suma del subtotal, menos los descuentos aplicables, mÃ¡s
+											las contribuciones recibidas (impuestos trasladados -
+											federales o locales, derechos, productos,
+											aprovechamientos, aportaciones de seguridad social,
+											contribuciones de mejoras) menos los impuestos
+											retenidos. Si el valor es superior al lÃ­mite que
+											establezca el SAT en la ResoluciÃ³n MiscelÃ¡nea Fiscal
+											vigente, el emisor debe obtener del PAC que vaya a
+											timbrar el CFDI, de manera no automÃ¡tica, una clave de
+											confirmaciÃ³n para ratificar que el valor es correcto e
+											integrar dicha clave en el atributo Confirmacion. No se
+											permiten valores negativos.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="TipoDeComprobante" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para expresar la clave
+											del efecto del comprobante fiscal para el contribuyente
+											emisor.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="MetodoPago" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>Atributo condicional para precisar la
+											clave del mÃ©todo de pago que aplica para este
+											comprobante fiscal digital por Internet, conforme al
+											ArtÃ­culo 29-A fracciÃ³n VII incisos a y b del
+											CFF.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="LugarExpedicion" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para incorporar el
+											cÃ³digo postal del lugar de expediciÃ³n del comprobante
+											(domicilio de la matriz o de la
+											sucursal).</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="Confirmacion" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>Atributo condicional para registrar la
+											clave de confirmaciÃ³n que entregue el PAC para expedir
+											el comprobante con importes grandes, con un tipo de
+											cambio fuera del rango establecido o con ambos casos. Es
+											requerido cuando se registra un tipo de cambio o un
+											total fuera del rango establecido.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:whiteSpace value="collapse" />
+                      <xs:length value="5" />
+                      <xs:pattern value="[0-9a-zA-Z]{5}" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="IdCliente">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:minLength value="1" />
+                <xs:maxLength value="256" />
+                <xs:whiteSpace value="collapse" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="IdRef">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:minLength value="1" />
+                <xs:maxLength value="256" />
+                <xs:whiteSpace value="collapse" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Timbre">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="TimbreFiscalDigital">
+              <xs:annotation>
+                <xs:documentation>Complemento requerido para el Timbrado Fiscal
+									Digital que da validez al Comprobante fiscal digital por
+									Internet.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:attribute fixed="1.1" name="Version" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para la expresiÃ³n de la
+											versiÃ³n del estÃ¡ndar del Timbre Fiscal
+											Digital</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="UUID" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para expresar los 36
+											caracteres del folio fiscal (UUID) de la transacciÃ³n de
+											timbrado conforme al estÃ¡ndar RFC
+											4122</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:whiteSpace value="collapse" />
+                      <xs:length value="36" />
+                      <xs:pattern value="[a-f0-9A-F]{8}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{12}" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="FechaTimbrado" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para expresar la fecha
+											y hora, de la generaciÃ³n del timbre por la certificaciÃ³n
+											digital del SAT. Se expresa en la forma
+											AAAA-MM-DDThh:mm:ss y debe corresponder con la hora de
+											la Zona Centro del Sistema de Horario en
+											MÃ©xico.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="RfcProvCertif" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para expresar el RFC
+											del proveedor de certificaciÃ³n de comprobantes fiscales
+											digitales que genera el timbre fiscal
+											digital.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="Leyenda" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>Atributo opcional para registrar
+											informaciÃ³n que el SAT comunique a los usuarios del
+											CFDI.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:whiteSpace value="collapse" />
+                      <xs:minLength value="12" />
+                      <xs:maxLength value="150" />
+                      <xs:pattern value="([A-Z]|[a-z]|[0-9]| |Ã‘|Ã±|!|&quot;|%|&amp;|'|Â´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|Ã¡|Ã©|Ã­|Ã³|Ãº|Ã|Ã‰|Ã|Ã“|Ãš|Ã¼|Ãœ){1,150}" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="SelloCFD" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para contener el sello
+											digital del comprobante fiscal o del comprobante de
+											retenciones, que se ha timbrado. El sello debe ser
+											expresado como una cadena de texto en formato Base
+											64.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:whiteSpace value="collapse" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="NoCertificadoSAT" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para expresar el nÃºmero
+											de serie del certificado del SAT usado para generar el
+											sello digital del Timbre Fiscal
+											Digital.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:length value="20" />
+                      <xs:whiteSpace value="collapse" />
+                      <xs:pattern value="[0-9]{20}" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="SelloSAT" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para contener el sello
+											digital del Timbre Fiscal Digital, al que hacen
+											referencia las reglas de la ResoluciÃ³n MiscelÃ¡nea
+											vigente. El sello debe ser expresado como una cadena de
+											texto en formato Base 64.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:whiteSpace value="collapse" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="IdCliente">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:minLength value="1" />
+                <xs:maxLength value="256" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="IdRef">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:minLength value="1" />
+                <xs:maxLength value="256" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Comprobante">
+        <xs:annotation>
+          <xs:documentation>EstÃ¡ndar de Comprobante Fiscal Digital por
+									Internet.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="CfdiRelacionados">
+              <xs:annotation>
+                <xs:documentation>Nodo opcional para precisar la
+												informaciÃ³n de los comprobantes
+												relacionados.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="1" maxOccurs="unbounded" name="CfdiRelacionado">
+                    <xs:annotation>
+                      <xs:documentation>Nodo requerido para precisar la
+												informaciÃ³n de los comprobantes
+												relacionados.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:attribute name="UUID" use="required">
+                        <xs:annotation>
+                          <xs:documentation>Atributo requerido para
+												registrar el folio fiscal (UUID) de un CFDI
+												relacionado con el presente comprobante, por
+												ejemplo: Si el CFDI relacionado es un comprobante
+												de traslado que sirve para registrar el movimiento
+												de la mercancÃ­a. Si este comprobante se usa como
+												nota de crÃ©dito o nota de dÃ©bito del comprobante
+												relacionado. Si este comprobante es una devoluciÃ³n
+												sobre el comprobante relacionado. Si Ã©ste
+												sustituye a una factura
+												cancelada.</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                          <xs:restriction base="xs:string">
+                            <xs:length value="36" />
+                            <xs:whiteSpace value="collapse" />
+                            <xs:pattern value="[a-f0-9A-F]{8}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{12}" />
+                          </xs:restriction>
+                        </xs:simpleType>
+                      </xs:attribute>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:attribute name="TipoRelacion" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para indicar
+												la clave de la relaciÃ³n que existe entre Ã©ste que
+												se esta generando y el o los CFDI
+												previos.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="Emisor">
+              <xs:annotation>
+                <xs:documentation>Nodo requerido para expresar la
+												informaciÃ³n del contribuyente emisor del
+												comprobante.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:attribute name="Rfc" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para
+												registrar la Clave del Registro Federal de
+												Contribuyentes correspondiente al contribuyente
+												emisor del comprobante.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="Nombre" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>Atributo opcional para registrar
+												el nombre, denominaciÃ³n o razÃ³n social del
+												contribuyente emisor del
+												comprobante.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:minLength value="1" />
+                      <xs:maxLength value="254" />
+                      <xs:whiteSpace value="collapse" />
+                      <xs:pattern value="[^|]{1,254}" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="RegimenFiscal" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para
+												incorporar la clave del rÃ©gimen del contribuyente
+												emisor al que aplicarÃ¡ el efecto fiscal de este
+												comprobante.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="Receptor">
+              <xs:annotation>
+                <xs:documentation>Nodo requerido para precisar la
+												informaciÃ³n del contribuyente receptor del
+												comprobante.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:attribute name="Rfc" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para precisar
+												la Clave del Registro Federal de Contribuyentes
+												correspondiente al contribuyente receptor del
+												comprobante.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="Nombre" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>Atributo opcional para precisar
+												el nombre, denominaciÃ³n o razÃ³n social del
+												contribuyente receptor del
+												comprobante.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:minLength value="1" />
+                      <xs:maxLength value="254" />
+                      <xs:whiteSpace value="collapse" />
+                      <xs:pattern value="[^|]{1,254}" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="ResidenciaFiscal" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>Atributo condicional para
+												registrar la clave del paÃ­s de residencia para
+												efectos fiscales del receptor del comprobante,
+												cuando se trate de un extranjero, y que es
+												conforme con la especificaciÃ³n ISO 3166-1 alpha-3.
+												Es requerido cuando se incluya el complemento de
+												comercio exterior o se registre el atributo
+												NumRegIdTrib.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="NumRegIdTrib" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>Atributo condicional para
+												expresar el nÃºmero de registro de identidad fiscal
+												del receptor cuando sea residente en el
+												extranjero. Es requerido cuando se incluya el
+												complemento de comercio
+												exterior.</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:minLength value="1" />
+                      <xs:maxLength value="40" />
+                      <xs:whiteSpace value="collapse" />
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="UsoCFDI" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Atributo requerido para expresar
+												la clave del uso que darÃ¡ a esta factura el
+												receptor del CFDI.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="Conceptos">
+              <xs:annotation>
+                <xs:documentation>Nodo requerido para listar los
+												conceptos cubiertos por el
+												comprobante.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element maxOccurs="unbounded" name="Concepto">
+                    <xs:annotation>
+                      <xs:documentation>Nodo requerido para registrar la
+												informaciÃ³n detallada de un bien o servicio
+												amparado en el comprobante.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element minOccurs="0" name="Impuestos">
+                          <xs:annotation>
+                            <xs:documentation>Nodo opcional para capturar los
+												impuestos aplicables al presente concepto. Cuando
+												un concepto no registra un impuesto, implica que
+												no es objeto del mismo.</xs:documentation>
+                          </xs:annotation>
+                          <xs:complexType>
+                            <xs:sequence>
+                              <xs:element minOccurs="0" name="Traslados">
+                                <xs:annotation>
+                                  <xs:documentation>Nodo opcional para asentar los
+												impuestos trasladados aplicables al presente
+												concepto.</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                  <xs:sequence>
+                                    <xs:element maxOccurs="unbounded" name="Traslado">
+                                      <xs:annotation>
+                                        <xs:documentation>Nodo requerido para asentar la
+												informaciÃ³n detallada de un traslado de impuestos
+												aplicable al presente concepto.</xs:documentation>
+                                      </xs:annotation>
+                                      <xs:complexType>
+                                        <xs:attribute name="Base" use="required">
+                                          <xs:annotation>
+                                            <xs:documentation>Atributo requerido para seÃ±alar
+												la base para el cÃ¡lculo del impuesto, la
+												determinaciÃ³n de la base se realiza de acuerdo con
+												las disposiciones fiscales vigentes. No se
+												permiten valores negativos.</xs:documentation>
+                                          </xs:annotation>
+                                          <xs:simpleType>
+                                            <xs:restriction base="xs:decimal">
+                                              <xs:fractionDigits value="6" />
+                                              <xs:minInclusive value="0.000001" />
+                                              <xs:whiteSpace value="collapse" />
+                                            </xs:restriction>
+                                          </xs:simpleType>
+                                        </xs:attribute>
+                                        <xs:attribute name="Impuesto" use="required">
+                                          <xs:annotation>
+                                            <xs:documentation>Atributo requerido para seÃ±alar
+												la clave del tipo de impuesto trasladado aplicable
+												al concepto.</xs:documentation>
+                                          </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="TipoFactor" use="required">
+                                          <xs:annotation>
+                                            <xs:documentation>Atributo requerido para seÃ±alar
+												la clave del tipo de factor que se aplica a la
+												base del impuesto.</xs:documentation>
+                                          </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="TasaOCuota" use="optional">
+                                          <xs:annotation>
+                                            <xs:documentation>Atributo condicional para
+												seÃ±alar el valor de la tasa o cuota del impuesto
+												que se traslada para el presente concepto. Es
+												requerido cuando el atributo TipoFactor tenga una
+												clave que corresponda a Tasa o
+												Cuota.</xs:documentation>
+                                          </xs:annotation>
+                                          <xs:simpleType>
+                                            <xs:restriction base="xs:decimal">
+                                              <xs:fractionDigits value="6" />
+                                              <xs:minInclusive value="0.000000" />
+                                              <xs:whiteSpace value="collapse" />
+                                            </xs:restriction>
+                                          </xs:simpleType>
+                                        </xs:attribute>
+                                        <xs:attribute name="Importe" use="optional">
+                                          <xs:annotation>
+                                            <xs:documentation>Atributo condicional para
+												seÃ±alar el importe del impuesto trasladado que
+												aplica al concepto. No se permiten valores
+												negativos. Es requerido cuando TipoFactor sea Tasa
+												o Cuota</xs:documentation>
+                                          </xs:annotation>
+                                        </xs:attribute>
+                                      </xs:complexType>
+                                    </xs:element>
+                                  </xs:sequence>
+                                </xs:complexType>
+                              </xs:element>
+                              <xs:element minOccurs="0" name="Retenciones">
+                                <xs:annotation>
+                                  <xs:documentation>Nodo opcional para asentar los
+												impuestos retenidos aplicables al presente
+												concepto.</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                  <xs:sequence>
+                                    <xs:element maxOccurs="unbounded" name="Retencion">
+                                      <xs:annotation>
+                                        <xs:documentation>Nodo requerido para asentar la
+												informaciÃ³n detallada de una retenciÃ³n de
+												impuestos aplicable al presente
+												concepto.</xs:documentation>
+                                      </xs:annotation>
+                                      <xs:complexType>
+                                        <xs:attribute name="Base" use="required">
+                                          <xs:annotation>
+                                            <xs:documentation>Atributo requerido para seÃ±alar
+												la base para el cÃ¡lculo de la retenciÃ³n, la
+												determinaciÃ³n de la base se realiza de acuerdo con
+												las disposiciones fiscales vigentes. No se
+												permiten valores negativos.</xs:documentation>
+                                          </xs:annotation>
+                                          <xs:simpleType>
+                                            <xs:restriction base="xs:decimal">
+                                              <xs:fractionDigits value="6" />
+                                              <xs:minInclusive value="0.000001" />
+                                              <xs:whiteSpace value="collapse" />
+                                            </xs:restriction>
+                                          </xs:simpleType>
+                                        </xs:attribute>
+                                        <xs:attribute name="Impuesto" use="required">
+                                          <xs:annotation>
+                                            <xs:documentation>Atributo requerido para seÃ±alar
+												la clave del tipo de impuesto retenido aplicable
+												al concepto.</xs:documentation>
+                                          </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="TipoFactor" use="required">
+                                          <xs:annotation>
+                                            <xs:documentation>Atributo requerido para seÃ±alar
+												la clave del tipo de factor que se aplica a la
+												base del impuesto.</xs:documentation>
+                                          </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="TasaOCuota" use="required">
+                                          <xs:annotation>
+                                            <xs:documentation>Atributo requerido para seÃ±alar
+												la tasa o cuota del impuesto que se retiene para
+												el presente concepto.</xs:documentation>
+                                          </xs:annotation>
+                                          <xs:simpleType>
+                                            <xs:restriction base="xs:decimal">
+                                              <xs:whiteSpace value="collapse" />
+                                              <xs:minInclusive value="0.000000" />
+                                              <xs:fractionDigits value="6" />
+                                            </xs:restriction>
+                                          </xs:simpleType>
+                                        </xs:attribute>
+                                        <xs:attribute name="Importe" use="required">
+                                          <xs:annotation>
+                                            <xs:documentation>Atributo requerido para seÃ±alar
+												el importe del impuesto retenido que aplica al
+												concepto. No se permiten valores
+												negativos.</xs:documentation>
+                                          </xs:annotation>
+                                        </xs:attribute>
+                                      </xs:complexType>
+                                    </xs:element>
+                                  </xs:sequence>
+                                </xs:complexType>
+                              </xs:element>
+                            </xs:sequence>
+                          </xs:complexType>
+                        </xs:element>
+                        <xs:element minOccurs="0" maxOccurs="unbounded" name="InformacionAduanera">
+                          <xs:annotation>
+                            <xs:documentation>Nodo opcional para introducir la
+												informaciÃ³n aduanera aplicable cuando se trate de
+												ventas de primera mano de mercancÃ­as importadas o
+												se trate de operaciones de comercio exterior con
+												bienes o servicios.</xs:documentation>
+                          </xs:annotation>
+                          <xs:complexType>
+                            <xs:attribute name="NumeroPedimento" use="required">
+                              <xs:annotation>
+                                <xs:documentation>Atributo requerido para expresar
+												el nÃºmero del pedimento que ampara la importaciÃ³n
+												del bien que se expresa en el siguiente formato:
+												Ãºltimos 2 dÃ­gitos del aÃ±o de validaciÃ³n seguidos
+												por dos espacios, 2 dÃ­gitos de la aduana de
+												despacho seguidos por dos espacios, 4 dÃ­gitos del
+												nÃºmero de la patente seguidos por dos espacios, 1
+												dÃ­gito que corresponde al Ãºltimo dÃ­gito del aÃ±o en
+												curso, salvo que se trate de un pedimento
+												consolidado iniciado en el aÃ±o inmediato anterior
+												o del pedimento original de una rectificaciÃ³n,
+												seguido de 6 dÃ­gitos de la numeraciÃ³n progresiva
+												por aduana.</xs:documentation>
+                              </xs:annotation>
+                              <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                  <xs:length value="21" />
+                                  <xs:pattern value="[0-9]{2}  [0-9]{2}  [0-9]{4}  [0-9]{7}" />
+                                </xs:restriction>
+                              </xs:simpleType>
+                            </xs:attribute>
+                          </xs:complexType>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="CuentaPredial">
+                          <xs:annotation>
+                            <xs:documentation>Nodo opcional para asentar el
+												nÃºmero de cuenta predial con el que fue registrado
+												el inmueble, en el sistema catastral de la entidad
+												federativa de que trate, o bien para incorporar
+												los datos de identificaciÃ³n del certificado de
+												participaciÃ³n inmobiliaria no
+												amortizable.</xs:documentation>
+                          </xs:annotation>
+                          <xs:complexType>
+                            <xs:attribute name="Numero" use="required">
+                              <xs:annotation>
+                                <xs:documentation>Atributo requerido para precisar
+												el nÃºmero de la cuenta predial del inmueble
+												cubierto por el presente concepto, o bien para
+												incorporar los datos de identificaciÃ³n del
+												certificado de participaciÃ³n inmobiliaria no
+												amortizable, tratÃ¡ndose de
+												arrendamiento.</xs:documentation>
+                              </xs:annotation>
+                              <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                  <xs:minLength value="1" />
+                                  <xs:maxLength value="150" />
+                                  <xs:whiteSpace value="collapse" />
+                                  <xs:pattern value="[0-9]{1,150}" />
+                                </xs:restriction>
+                              </xs:simpleType>
+                            </xs:attribute>
+                          </xs:complexType>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="ComplementoConcepto">
+                          <xs:annotation>
+                            <xs:documentation>Nodo opcional donde se incluyen
+												los nodos complementarios de extensiÃ³n al concepto
+												definidos por el SAT, de acuerdo con las
+												disposiciones particulares para un sector o
+												actividad especÃ­fica.</xs:documentation>
+                          </xs:annotation>
+                          <xs:complexType>
+                            <xs:sequence>
+                              <xs:any maxOccurs="unbounded" />
+                            </xs:sequence>
+                          </xs:complexType>
+                        </xs:element>
+                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Parte">
+                          <xs:annotation>
+                            <xs:documentation>Nodo opcional para expresar las
+												partes o componentes que integran la totalidad del
+												concepto expresado en el comprobante fiscal
+												digital por Internet.</xs:documentation>
+                          </xs:annotation>
+                          <xs:complexType>
+                            <xs:sequence>
+                              <xs:element minOccurs="0" maxOccurs="unbounded" name="InformacionAduanera">
+                                <xs:annotation>
+                                  <xs:documentation>Nodo opcional para introducir la
+												informaciÃ³n aduanera aplicable cuando se trate de
+												ventas de primera mano de mercancÃ­as importadas o
+												se trate de operaciones de comercio exterior con
+												bienes o servicios.</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                  <xs:attribute name="NumeroPedimento" use="required">
+                                    <xs:annotation>
+                                      <xs:documentation>Atributo requerido para expresar
+												el nÃºmero del pedimento que ampara la importaciÃ³n
+												del bien que se expresa en el siguiente formato:
+												Ãºltimos 2 dÃ­gitos del aÃ±o de validaciÃ³n seguidos
+												por dos espacios, 2 dÃ­gitos de la aduana de
+												despacho seguidos por dos espacios, 4 dÃ­gitos del
+												nÃºmero de la patente seguidos por dos espacios, 1
+												dÃ­gito que corresponde al Ãºltimo dÃ­gito del aÃ±o en
+												curso, salvo que se trate de un pedimento
+												consolidado iniciado en el aÃ±o inmediato anterior
+												o del pedimento original de una rectificaciÃ³n,
+												seguido de 6 dÃ­gitos de la numeraciÃ³n progresiva
+												por aduana.</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                      <xs:restriction base="xs:string">
+                                        <xs:length value="21" />
+                                        <xs:pattern value="[0-9]{2}  [0-9]{2}  [0-9]{4}  [0-9]{7}" />
+                                      </xs:restriction>
+                                    </xs:simpleType>
+                                  </xs:attribute>
+                                </xs:complexType>
+                              </xs:element>
+                            </xs:sequence>
+                            <xs:attribute name="ClaveProdServ" use="required">
+                              <xs:annotation>
+                                <xs:documentation>Atributo requerido para expresar
+												la clave del producto o del servicio amparado por
+												la presente parte. Es requerido y deben utilizar
+												las claves del catÃ¡logo de productos y servicios,
+												cuando los conceptos que registren por sus
+												actividades correspondan con dichos
+												conceptos.</xs:documentation>
+                              </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="NoIdentificacion" use="optional">
+                              <xs:annotation>
+                                <xs:documentation>Atributo opcional para expresar
+												el nÃºmero de serie, nÃºmero de parte del bien o
+												identificador del producto o del servicio amparado
+												por la presente parte. Opcionalmente se puede
+												utilizar claves del estÃ¡ndar
+												GTIN.</xs:documentation>
+                              </xs:annotation>
+                              <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                  <xs:minLength value="1" />
+                                  <xs:maxLength value="100" />
+                                  <xs:whiteSpace value="collapse" />
+                                  <xs:pattern value="[^|]{1,100}" />
+                                </xs:restriction>
+                              </xs:simpleType>
+                            </xs:attribute>
+                            <xs:attribute name="Cantidad" use="required">
+                              <xs:annotation>
+                                <xs:documentation>Atributo requerido para precisar
+												la cantidad de bienes o servicios del tipo
+												particular definido por la presente
+												parte.</xs:documentation>
+                              </xs:annotation>
+                              <xs:simpleType>
+                                <xs:restriction base="xs:decimal">
+                                  <xs:fractionDigits value="6" />
+                                  <xs:minInclusive value="0.000001" />
+                                  <xs:whiteSpace value="collapse" />
+                                </xs:restriction>
+                              </xs:simpleType>
+                            </xs:attribute>
+                            <xs:attribute name="Unidad" use="optional">
+                              <xs:annotation>
+                                <xs:documentation>Atributo opcional para precisar
+												la unidad de medida propia de la operaciÃ³n del
+												emisor, aplicable para la cantidad expresada en la
+												parte. La unidad debe corresponder con la
+												descripciÃ³n de la parte. </xs:documentation>
+                              </xs:annotation>
+                              <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                  <xs:minLength value="1" />
+                                  <xs:maxLength value="20" />
+                                  <xs:whiteSpace value="collapse" />
+                                  <xs:pattern value="[^|]{1,20}" />
+                                </xs:restriction>
+                              </xs:simpleType>
+                            </xs:attribute>
+                            <xs:attribute name="Descripcion" use="required">
+                              <xs:annotation>
+                                <xs:documentation>Atributo requerido para precisar
+												la descripciÃ³n del bien o servicio cubierto por la
+												presente parte.</xs:documentation>
+                              </xs:annotation>
+                              <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                  <xs:minLength value="1" />
+                                  <xs:maxLength value="1000" />
+                                  <xs:whiteSpace value="collapse" />
+                                  <xs:pattern value="[^|]{1,1000}" />
+                                </xs:restriction>
+                              </xs:simpleType>
+                            </xs:attribute>
+                            <xs:attribute name="ValorUnitario" use="optional">
+                              <xs:annotation>
+                                <xs:documentation>Atributo opcional para precisar
+												el valor o precio unitario del bien o servicio
+												cubierto por la presente parte. No se permiten
+												valores negativos.</xs:documentation>
+                              </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="Importe" use="optional">
+                              <xs:annotation>
+                                <xs:documentation>Atributo opcional para precisar
+												el importe total de los bienes o servicios de la
+												presente parte. Debe ser equivalente al resultado
+												de multiplicar la cantidad por el valor unitario
+												expresado en la parte. No se permiten valores
+												negativos.</xs:documentation>
+                              </xs:annotation>
+                            </xs:attribute>
+                          </xs:complexType>
+                        </xs:element>
+                      </xs:sequence>
+                      <xs:attribute name="ClaveProdServ" use="required">
+                        <xs:annotation>
+                          <xs:documentation>Atributo requerido para expresar
+												la clave del producto o del servicio amparado por
+												el presente concepto. Es requerido y deben
+												utilizar las claves del catÃ¡logo de productos y
+												servicios, cuando los conceptos que registren por
+												sus actividades correspondan con dichos
+												conceptos.</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                      <xs:attribute name="NoIdentificacion" use="optional">
+                        <xs:annotation>
+                          <xs:documentation>Atributo opcional para expresar
+												el nÃºmero de parte, identificador del producto o
+												del servicio, la clave de producto o servicio, SKU
+												o equivalente, propia de la operaciÃ³n del emisor,
+												amparado por el presente concepto. Opcionalmente
+												se puede utilizar claves del estÃ¡ndar
+												GTIN.</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                          <xs:restriction base="xs:string">
+                            <xs:whiteSpace value="collapse" />
+                            <xs:minLength value="1" />
+                            <xs:maxLength value="100" />
+                            <xs:pattern value="[^|]{1,100}" />
+                          </xs:restriction>
+                        </xs:simpleType>
+                      </xs:attribute>
+                      <xs:attribute name="Cantidad" use="required">
+                        <xs:annotation>
+                          <xs:documentation>Atributo requerido para precisar
+												la cantidad de bienes o servicios del tipo
+												particular definido por el presente
+												concepto.</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                          <xs:restriction base="xs:decimal">
+                            <xs:fractionDigits value="6" />
+                            <xs:minInclusive value="0.000001" />
+                            <xs:whiteSpace value="collapse" />
+                          </xs:restriction>
+                        </xs:simpleType>
+                      </xs:attribute>
+                      <xs:attribute name="ClaveUnidad" use="required">
+                        <xs:annotation>
+                          <xs:documentation>Atributo requerido para precisar
+												la clave de unidad de medida estandarizada
+												aplicable para la cantidad expresada en el
+												concepto. La unidad debe corresponder con la
+												descripciÃ³n del concepto.</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                      <xs:attribute name="Unidad" use="optional">
+                        <xs:annotation>
+                          <xs:documentation>Atributo opcional para precisar
+												la unidad de medida propia de la operaciÃ³n del
+												emisor, aplicable para la cantidad expresada en el
+												concepto. La unidad debe corresponder con la
+												descripciÃ³n del concepto.</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                          <xs:restriction base="xs:string">
+                            <xs:minLength value="1" />
+                            <xs:maxLength value="20" />
+                            <xs:whiteSpace value="collapse" />
+                            <xs:pattern value="[^|]{1,20}" />
+                          </xs:restriction>
+                        </xs:simpleType>
+                      </xs:attribute>
+                      <xs:attribute name="Descripcion" use="required">
+                        <xs:annotation>
+                          <xs:documentation>Atributo requerido para precisar
+												la descripciÃ³n del bien o servicio cubierto por el
+												presente concepto.</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                          <xs:restriction base="xs:string">
+                            <xs:minLength value="1" />
+                            <xs:maxLength value="1000" />
+                            <xs:whiteSpace value="collapse" />
+                            <xs:pattern value="[^|]{1,1000}" />
+                          </xs:restriction>
+                        </xs:simpleType>
+                      </xs:attribute>
+                      <xs:attribute name="ValorUnitario" use="required">
+                        <xs:annotation>
+                          <xs:documentation>Atributo requerido para precisar
+												el valor o precio unitario del bien o servicio
+												cubierto por el presente
+												concepto.</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                      <xs:attribute name="Importe" use="required">
+                        <xs:annotation>
+                          <xs:documentation>Atributo requerido para precisar
+												el importe total de los bienes o servicios del
+												presente concepto. Debe ser equivalente al
+												resultado de multiplicar la cantidad por el valor
+												unitario expresado en el concepto. No se permiten
+												valores negativos. </xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                      <xs:attribute name="Descuento">
+                        <xs:annotation>
+                          <xs:documentation>Atributo opcional para
+												representar el importe de los descuentos
+												aplicables al concepto. No se permiten valores
+												negativos.</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="Impuestos">
+              <xs:annotation>
+                <xs:documentation>Nodo condicional para expresar el
+												resumen de los impuestos
+												aplicables.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" name="Retenciones">
+                    <xs:annotation>
+                      <xs:documentation>Nodo condicional para capturar
+												los impuestos retenidos aplicables. Es requerido
+												cuando en los conceptos se registre algÃºn impuesto
+												retenido.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="Retencion">
+                          <xs:annotation>
+                            <xs:documentation>Nodo requerido para la
+												informaciÃ³n detallada de una retenciÃ³n de impuesto
+												especÃ­fico.</xs:documentation>
+                          </xs:annotation>
+                          <xs:complexType>
+                            <xs:attribute name="Impuesto" use="required">
+                              <xs:annotation>
+                                <xs:documentation>Atributo requerido para seÃ±alar
+												la clave del tipo de impuesto
+												retenido</xs:documentation>
+                              </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="Importe" use="required">
+                              <xs:annotation>
+                                <xs:documentation>Atributo requerido para seÃ±alar
+												el monto del impuesto retenido. No se permiten
+												valores negativos.</xs:documentation>
+                              </xs:annotation>
+                            </xs:attribute>
+                          </xs:complexType>
+                        </xs:element>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element minOccurs="0" name="Traslados">
+                    <xs:annotation>
+                      <xs:documentation>Nodo condicional para capturar
+												los impuestos trasladados aplicables. Es requerido
+												cuando en los conceptos se registre un impuesto
+												trasladado.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="Traslado">
+                          <xs:annotation>
+                            <xs:documentation>Nodo requerido para la
+												informaciÃ³n detallada de un traslado de impuesto
+												especÃ­fico.</xs:documentation>
+                          </xs:annotation>
+                          <xs:complexType>
+                            <xs:attribute name="Impuesto" use="required">
+                              <xs:annotation>
+                                <xs:documentation>Atributo requerido para seÃ±alar
+												la clave del tipo de impuesto
+												trasladado.</xs:documentation>
+                              </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="TipoFactor" use="required">
+                              <xs:annotation>
+                                <xs:documentation>Atributo requerido para seÃ±alar
+												la clave del tipo de factor que se aplica a la
+												base del impuesto.</xs:documentation>
+                              </xs:annotation>
+                            </xs:attribute>
+                            <xs:attribute name="TasaOCuota" use="required">
+                              <xs:annotation>
+                                <xs:documentation>Atributo requerido para seÃ±alar
+												el valor de la tasa o cuota del impuesto que se
+												traslada por los conceptos amparados en el
+												comprobante.</xs:documentation>
+                              </xs:annotation>
+                              <xs:simpleType>
+                                <xs:restriction base="xs:decimal">
+                                  <xs:whiteSpace value="collapse" />
+                                  <xs:minInclusive value="0.000000" />
+                                  <xs:fractionDigits value="6" />
+                                </xs:restriction>
+                              </xs:simpleType>
+                            </xs:attribute>
+                            <xs:attribute name="Importe" use="required">
+                              <xs:annotation>
+                                <xs:documentation>Atributo requerido para seÃ±alar
+												la suma del importe del impuesto trasladado,
+												agrupado por impuesto, TipoFactor y TasaOCuota. No
+												se permiten valores negativos.</xs:documentation>
+                              </xs:annotation>
+                            </xs:attribute>
+                          </xs:complexType>
+                        </xs:element>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:attribute name="TotalImpuestosRetenidos" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>Atributo condicional para
+												expresar el total de los impuestos retenidos que
+												se desprenden de los conceptos expresados en el
+												comprobante fiscal digital por Internet. No se
+												permiten valores negativos. Es requerido cuando en
+												los conceptos se registren impuestos
+												retenidos</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="TotalImpuestosTrasladados" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>Atributo condicional para
+												expresar el total de los impuestos trasladados que
+												se desprenden de los conceptos expresados en el
+												comprobante fiscal digital por Internet. No se
+												permiten valores negativos. Es requerido cuando en
+												los conceptos se registren impuestos
+												trasladados.</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Complemento">
+              <xs:annotation>
+                <xs:documentation>Nodo opcional donde se incluye el
+												complemento Timbre Fiscal Digital de manera
+												obligatoria y los nodos complementarios determinados
+												por el SAT, de acuerdo con las disposiciones
+												particulares para un sector o actividad
+												especÃ­fica.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:any minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="Addenda">
+              <xs:annotation>
+                <xs:documentation>Nodo opcional para recibir las
+												extensiones al presente formato que sean de utilidad
+												al contribuyente. Para las reglas de uso del mismo,
+												referirse al formato origen.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:any maxOccurs="unbounded" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute fixed="3.3" name="Version" use="required">
+            <xs:annotation>
+              <xs:documentation>Atributo requerido con valor prefijado a
+											3.3 que indica la versiÃ³n del estÃ¡ndar bajo el que se
+											encuentra expresado el comprobante.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:whiteSpace value="collapse" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="Serie" use="optional">
+            <xs:annotation>
+              <xs:documentation>Atributo opcional para precisar la serie
+											para control interno del contribuyente. Este atributo
+											acepta una cadena de caracteres.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:minLength value="1" />
+                <xs:maxLength value="25" />
+                <xs:whiteSpace value="collapse" />
+                <xs:pattern value="[^|]{1,25}" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="Folio" use="optional">
+            <xs:annotation>
+              <xs:documentation>Atributo opcional para control interno del
+											contribuyente que expresa el folio del comprobante,
+											acepta una cadena de caracteres.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:minLength value="1" />
+                <xs:maxLength value="40" />
+                <xs:whiteSpace value="collapse" />
+                <xs:pattern value="[^|]{1,40}" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="Fecha" use="required">
+            <xs:annotation>
+              <xs:documentation>Atributo requerido para la expresiÃ³n de la
+											fecha y hora de expediciÃ³n del Comprobante Fiscal
+											Digital por Internet. Se expresa en la forma
+											AAAA-MM-DDThh:mm:ss y debe corresponder con la hora
+											local donde se expide el comprobante.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Sello" use="required">
+            <xs:annotation>
+              <xs:documentation>Atributo requerido para contener el sello
+											digital del comprobante fiscal, al que hacen referencia
+											las reglas de resoluciÃ³n miscelÃ¡nea vigente. El sello
+											debe ser expresado como una cadena de texto en formato
+											Base 64.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:whiteSpace value="collapse" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="FormaPago" use="optional">
+            <xs:annotation>
+              <xs:documentation>Atributo condicional para expresar la
+											clave de la forma de pago de los bienes o servicios
+											amparados por el comprobante. Si no se conoce la forma
+											de pago este atributo se debe omitir.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="NoCertificado" use="required">
+            <xs:annotation>
+              <xs:documentation>Atributo requerido para expresar el nÃºmero
+											de serie del certificado de sello digital que ampara al
+											comprobante, de acuerdo con el acuse correspondiente a
+											20 posiciones otorgado por el sistema del
+											SAT.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:length value="20" />
+                <xs:whiteSpace value="collapse" />
+                <xs:pattern value="[0-9]{20}" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="Certificado" use="required">
+            <xs:annotation>
+              <xs:documentation>Atributo requerido que sirve para
+											incorporar el certificado de sello digital que ampara al
+											comprobante, como texto en formato base
+											64.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:whiteSpace value="collapse" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="CondicionesDePago" use="optional">
+            <xs:annotation>
+              <xs:documentation>Atributo condicional para expresar las
+											condiciones comerciales aplicables para el pago del
+											comprobante fiscal digital por Internet. Este atributo
+											puede ser condicionado mediante atributos o
+											complementos.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:whiteSpace value="collapse" />
+                <xs:minLength value="1" />
+                <xs:maxLength value="1000" />
+                <xs:pattern value="[^|]{1,1000}" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="SubTotal" use="required">
+            <xs:annotation>
+              <xs:documentation>Atributo requerido para representar la
+											suma de los importes de los conceptos antes de
+											descuentos e impuesto. No se permiten valores
+											negativos.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Descuento" use="optional">
+            <xs:annotation>
+              <xs:documentation>Atributo condicional para representar el
+											importe total de los descuentos aplicables antes de
+											impuestos. No se permiten valores negativos. Se debe
+											registrar cuando existan conceptos con
+											descuento.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Moneda" use="required">
+            <xs:annotation>
+              <xs:documentation>Atributo requerido para identificar la
+											clave de la moneda utilizada para expresar los montos,
+											cuando se usa moneda nacional se registra MXN. Conforme
+											con la especificaciÃ³n ISO 4217.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="TipoCambio" use="optional">
+            <xs:annotation>
+              <xs:documentation>Atributo condicional para representar el
+											tipo de cambio conforme con la moneda usada. Es
+											requerido cuando la clave de moneda es distinta de MXN y
+											de XXX. El valor debe reflejar el nÃºmero de pesos
+											mexicanos que equivalen a una unidad de la divisa
+											seÃ±alada en el atributo moneda. Si el valor estÃ¡ fuera
+											del porcentaje aplicable a la moneda tomado del catÃ¡logo
+											c_Moneda, el emisor debe obtener del PAC que vaya a
+											timbrar el CFDI, de manera no automÃ¡tica, una clave de
+											confirmaciÃ³n para ratificar que el valor es correcto e
+											integrar dicha clave en el atributo
+											Confirmacion.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:decimal">
+                <xs:fractionDigits value="6" />
+                <xs:minInclusive value="0.000001" />
+                <xs:whiteSpace value="collapse" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="Total" use="required">
+            <xs:annotation>
+              <xs:documentation>Atributo requerido para representar la
+											suma del subtotal, menos los descuentos aplicables, mÃ¡s
+											las contribuciones recibidas (impuestos trasladados -
+											federales o locales, derechos, productos,
+											aprovechamientos, aportaciones de seguridad social,
+											contribuciones de mejoras) menos los impuestos
+											retenidos. Si el valor es superior al lÃ­mite que
+											establezca el SAT en la ResoluciÃ³n MiscelÃ¡nea Fiscal
+											vigente, el emisor debe obtener del PAC que vaya a
+											timbrar el CFDI, de manera no automÃ¡tica, una clave de
+											confirmaciÃ³n para ratificar que el valor es correcto e
+											integrar dicha clave en el atributo Confirmacion. No se
+											permiten valores negativos.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="TipoDeComprobante" use="required">
+            <xs:annotation>
+              <xs:documentation>Atributo requerido para expresar la clave
+											del efecto del comprobante fiscal para el contribuyente
+											emisor.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="MetodoPago" use="optional">
+            <xs:annotation>
+              <xs:documentation>Atributo condicional para precisar la
+											clave del mÃ©todo de pago que aplica para este
+											comprobante fiscal digital por Internet, conforme al
+											ArtÃ­culo 29-A fracciÃ³n VII incisos a y b del
+											CFF.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="LugarExpedicion" use="required">
+            <xs:annotation>
+              <xs:documentation>Atributo requerido para incorporar el
+											cÃ³digo postal del lugar de expediciÃ³n del comprobante
+											(domicilio de la matriz o de la
+											sucursal).</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Confirmacion" use="optional">
+            <xs:annotation>
+              <xs:documentation>Atributo condicional para registrar la
+											clave de confirmaciÃ³n que entregue el PAC para expedir
+											el comprobante con importes grandes, con un tipo de
+											cambio fuera del rango establecido o con ambos casos. Es
+											requerido cuando se registra un tipo de cambio o un
+											total fuera del rango establecido.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:whiteSpace value="collapse" />
+                <xs:length value="5" />
+                <xs:pattern value="[0-9a-zA-Z]{5}" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="TimbreFiscalDigital">
+        <xs:annotation>
+          <xs:documentation>Complemento requerido para el Timbrado Fiscal Digital que da validez al Comprobante fiscal digital por Internet.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute fixed="1.1" name="Version" use="required">
+            <xs:annotation>
+              <xs:documentation>Atributo requerido para la expresiÃ³n de la versiÃ³n del estÃ¡ndar del Timbre Fiscal Digital</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute id="UUID" name="UUID" use="required">
+            <xs:annotation>
+              <xs:documentation>Atributo requerido para expresar los 36 caracteres del folio fiscal (UUID) de la transacciÃ³n de timbrado conforme al estÃ¡ndar RFC 4122</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:whiteSpace value="collapse" />
+                <xs:length value="36" />
+                <xs:pattern value="[a-f0-9A-F]{8}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{12}" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="FechaTimbrado" use="required">
+            <xs:annotation>
+              <xs:documentation>Atributo requerido para expresar la fecha y hora, de la generaciÃ³n del timbre por la certificaciÃ³n digital del SAT. Se expresa en la forma AAAA-MM-DDThh:mm:ss y debe corresponder con la hora de la Zona Centro del Sistema de Horario en MÃ©xico.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="RfcProvCertif" use="required">
+            <xs:annotation>
+              <xs:documentation>Atributo requerido para expresar el RFC del proveedor de certificaciÃ³n de comprobantes fiscales digitales que genera el timbre fiscal digital.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Leyenda" use="optional">
+            <xs:annotation>
+              <xs:documentation>Atributo opcional para registrar informaciÃ³n que el SAT comunique a los usuarios del CFDI.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:whiteSpace value="collapse" />
+                <xs:minLength value="12" />
+                <xs:maxLength value="150" />
+                <xs:pattern value="([A-Z]|[a-z]|[0-9]| |Ã‘|Ã±|!|&quot;|%|&amp;|'|Â´|-|:|;|&gt;|=|&lt;|@|_|,|\{|\}|`|~|Ã¡|Ã©|Ã­|Ã³|Ãº|Ã|Ã‰|Ã|Ã“|Ãš|Ã¼|Ãœ){1,150}" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="SelloCFD" use="required">
+            <xs:annotation>
+              <xs:documentation>Atributo requerido para contener el sello digital del comprobante fiscal o del comprobante de retenciones, que se ha timbrado. El sello debe ser expresado como una cadena de texto en formato Base 64.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:whiteSpace value="collapse" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="NoCertificadoSAT" use="required">
+            <xs:annotation>
+              <xs:documentation>Atributo requerido para expresar el nÃºmero de serie del certificado del SAT usado para generar el sello digital del Timbre Fiscal Digital.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:length value="20" />
+                <xs:whiteSpace value="collapse" />
+                <xs:pattern value="[0-9]{20}" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="SelloSAT" use="required">
+            <xs:annotation>
+              <xs:documentation>Atributo requerido para contener el sello digital del Timbre Fiscal Digital, al que hacen referencia las reglas de la ResoluciÃ³n MiscelÃ¡nea vigente. El sello debe ser expresado como una cadena de texto en formato Base 64.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:whiteSpace value="collapse" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="TimbradoCFDFault">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="TimbradoCFDFault" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="TimbradoCFDFault1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="TimbradoCFDFault" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="NewMessageRequest">
+    <wsdl:part name="parameter" element="tns:Comprobante" />
+  </wsdl:message>
+  <wsdl:message name="NewMessageResponse">
+    <wsdl:part name="parameter" element="tns:TimbreFiscalDigital" />
+  </wsdl:message>
+  <wsdl:message name="error">
+    <wsdl:part name="NewPart" element="tns:Error" />
+  </wsdl:message>
+  <wsdl:message name="TimbradoCFDFault">
+    <wsdl:part name="parameters" element="tns:TimbradoCFDFault" />
+  </wsdl:message>
+  <wsdl:message name="TimbradoCFDFault1">
+    <wsdl:part name="parameters" element="tns:TimbradoCFDFault1" />
+  </wsdl:message>
+  <wsdl:portType name="TimbradoCFDPortType">
+    <wsdl:operation name="TimbradoCFD">
+      <wsdl:input message="tns:NewMessageRequest" />
+      <wsdl:output message="tns:NewMessageResponse" />
+      <wsdl:fault name="FaultName" message="tns:error" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="TimbradoCFDBinding" type="tns:TimbradoCFDPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="TimbradoCFD">
+      <soap:operation soapAction="urn:TimbradoCFD" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="FaultName">
+        <soap:fault use="literal" name="FaultName" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="TimbradoCFDService">
+    <wsdl:port name="NewPort" binding="tns:TimbradoCFDBinding">
+      <soap:address location="https://timbrador.tralix.com:7070" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
